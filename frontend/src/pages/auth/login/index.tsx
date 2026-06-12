@@ -1,8 +1,26 @@
 import { Link } from "react-router-dom";
 import AuthPageShell from "../../../components/auth/AuthShell";
 import AuthPromoPanel from "../../../components/auth/AuthPromoPanel";
+import { useForm } from "react-hook-form";
+import { SubmitButton } from "../../../components/buttons/Button";
+import { loginDTO, type ICredentials } from "../../../types/auth-types";
+import { InputText } from "../../../components/form/InputText";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 export default function Login() {
+  // using hook form
+  const { control, handleSubmit, formState:{errors} } = useForm<ICredentials>({
+    defaultValues: {
+      username: "",
+      password: "",
+    },
+    resolver: zodResolver(loginDTO),
+  });
+  const submitForm = (data: ICredentials) => {
+    console.log(data);
+    
+  };
+
   return (
     <AuthPageShell rightPanel={<AuthPromoPanel />}>
       <div className="flex items-center gap-3 mb-8">
@@ -30,25 +48,26 @@ export default function Login() {
         Please enter your details to access your dashboard.
       </p>
 
-      <form className="mt-10 space-y-6">
-        <label className="block text-sm font-medium text-slate-700">
-          Email Address
-          <input
-            type="email"
-            autoComplete="email"
-            placeholder="name@company.com"
-            className="mt-3 w-full rounded-3xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 shadow-sm outline-none transition focus:border-indigo-500 focus:ring-4 focus:ring-indigo-100"
-          />
-        </label>
+      <form className="mt-10 space-y-6" onSubmit={handleSubmit(submitForm)}>
+        <InputText
+          label="Username"
+          name="username"
+          control={control}
+          type="text"
+          autoComplete="username"
+          placeholder="Enter your username"
+          errMsg={errors?.username?.message}
+        />
 
-        <label className="block text-sm font-medium text-slate-700">
-          Password
-          <input
-            type="password"
-            autoComplete="current-password"
-            className="mt-3 w-full rounded-3xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 shadow-sm outline-none transition focus:border-indigo-500 focus:ring-4 focus:ring-indigo-100"
-          />
-        </label>
+        <InputText
+          label="Password"
+          name="password"
+          control={control}
+          type="password"
+          autoComplete="current-password"
+          placeholder="Enter your password"
+          errMsg={errors?.password?.message}
+        />
 
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <label className="inline-flex items-center gap-2 text-sm text-slate-600">
@@ -66,12 +85,7 @@ export default function Login() {
           </Link>
         </div>
 
-        <button
-          type="submit"
-          className="mt-2 inline-flex w-full items-center justify-center rounded-3xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white shadow-xl shadow-indigo-500/20 transition hover:bg-indigo-700"
-        >
-          Sign In
-        </button>
+        <SubmitButton>Sign In</SubmitButton>
       </form>
 
       <div className="mt-8 border-t border-slate-200 pt-6 text-center text-sm text-slate-600">
