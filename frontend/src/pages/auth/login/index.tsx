@@ -3,18 +3,25 @@ import AuthPageShell from "../../../components/auth/AuthShell";
 import AuthPromoPanel from "../../../components/auth/AuthPromoPanel";
 import { useForm } from "react-hook-form";
 import { SubmitButton } from "../../../components/buttons/Button";
-import { loginDTO, type ICredentials, type ILoginResponse } from "../../../types/auth-types";
+import {
+  loginDTO,
+  type ICredentials,
+} from "../../../types/auth-types";
 import { InputText } from "../../../components/form/InputText";
 import { zodResolver } from "@hookform/resolvers/zod";
-import axiosInstance from "../../../config/apiClient";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-import Cookies from "js-cookie";
+import { useAuth } from "../../../lib/hook/auth-hook";
 
 export default function Login() {
   const navigate = useNavigate();
   // using hook form
-  const {control,handleSubmit,formState: { errors }} = useForm<ICredentials>({
+  const { login } = useAuth();
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<ICredentials>({
     defaultValues: {
       username: "",
       password: "",
@@ -23,15 +30,11 @@ export default function Login() {
   });
   const submitForm = async (data: ICredentials) => {
     try {
-      const loginResponse = await axiosInstance.post("/auth/login", data) as ILoginResponse;
-      Cookies.set("authToken", loginResponse.accessToken,{expires:1, secure:true, sameSite:"lax"});
-      Cookies.set("authToken", loginResponse.refreshToken,{expires:1, secure:true, sameSite:"lax"});
+      const userDetail = await login(data);
 
-      const userDetail = await axiosInstance.get("/auth/me") as {role: string};
+      navigate("/" + userDetail?.role);
       console.log(userDetail);
-      navigate("/"+userDetail?.role);
-      console.log(loginResponse);
-    } catch (exception : unknown) {
+    } catch (exception: unknown) {
       toast.error("Invalid or wrong credentials");
       console.log(exception);
     }

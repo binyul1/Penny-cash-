@@ -1,4 +1,5 @@
 import { NavLink, Outlet } from "react-router-dom";
+import { useAuth } from "../../lib/hook/auth-hook";
 
 const user = {
   firstName: "Alex",
@@ -7,6 +8,9 @@ const user = {
 };
 
 export default function AdminLayout() {
+    
+      const { loggedInUser } = useAuth();
+      console.log(loggedInUser)
   return (
     <section className="w-full min-h-screen flex bg-slate-100">
       <aside className="w-1/4 max-w-[320px] bg-white border-r border-slate-200 px-6 py-8 flex flex-col ">
@@ -175,7 +179,7 @@ export default function AdminLayout() {
                 </div>
                 <div>
                   <p className="text-sm font-semibold text-slate-900">
-                    {user.firstName} {user.lastName}
+                    {loggedInUser?.firstName} {loggedInUser?.lastName}
                   </p>
                   <p className="text-xs text-slate-500">Administrator</p>
                 </div>
