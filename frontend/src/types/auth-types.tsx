@@ -5,11 +5,6 @@ export interface ICredentials {
   password: string;
 }
 
-export const loginDTO = z.object({
-  username: z.string().nonempty("Username is required"),
-  password: z.string().min(8, "Password must have atleast 8 characters"),
-});
-
 export interface ILoginResponse {
   accessToken: string;
   refreshToken: string;
@@ -21,33 +16,6 @@ export interface ILoginResponse {
   image: string;
   id: number;
 }
-
-export const loginResponseDTO = z.object({
-  accessToken: z.string(),
-  refreshToken: z.string(),
-  email: z.string().email(),
-  firstName: z.string(),
-  lastName: z.string(),
-  username: z.string(),
-  gender: z.string(),
-  image: z.string().url(),
-  id: z.number(),
-});
-
-
-export interface IAddress {
-  address: string;
-  city: string;
-  state: string;
-  stateCode: string;
-  postalCode: string;
-  coordinates: {
-    lat: number;
-    lng: number;
-  };
-  country: string;
-}
-
 export interface IUserDetail {
   id: number;
   firstName: string;
@@ -68,4 +36,33 @@ export interface IUserDetail {
     address: IAddress;
   };
   role: string;
+}
+export const loginDTO = z.object({
+  username: z.string().nonempty("Username is required"),
+  password: z.string().min(8, "Password must have atleast 8 characters"),
+});
+
+export const loginResponseDTO = z.object({
+  accessToken: z.string(),
+  refreshToken: z.string(),
+  email: z.string().email(),
+  firstName: z.string(),
+  lastName: z.string(),
+  username: z.string(),
+  gender: z.string(),
+  image: z.string().url(),
+  id: z.number(),
+});
+
+export interface IAddress {
+  address: string;
+  city: string;
+  state: string;
+  stateCode: string;
+  postalCode: string;
+  coordinates: {
+    lat: number;
+    lng: number;
+  };
+  country: string;
 }

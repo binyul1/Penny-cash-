@@ -8,9 +8,8 @@ const user = {
 };
 
 export default function AdminLayout() {
-    
-      const { loggedInUser } = useAuth();
-      console.log(loggedInUser)
+    const {loggedInUser} = useAuth()
+    console.log(loggedInUser)
   return (
     <section className="w-full min-h-screen flex bg-slate-100">
       <aside className="w-1/4 max-w-[320px] bg-white border-r border-slate-200 px-6 py-8 flex flex-col ">
