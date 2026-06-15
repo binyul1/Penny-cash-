@@ -1,4 +1,4 @@
-import { Link } from "react-router";
+import { Link } from "react-router-dom";
 
 export default function NotFoundInner() {
   return (
@@ -22,7 +22,6 @@ export default function NotFoundInner() {
           >
             Go back home
           </Link>
-          
         </div>
 
         <div className="mt-12 rounded-4xl border border-slate-200 bg-slate-50 p-6">
