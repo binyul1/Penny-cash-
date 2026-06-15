@@ -2,8 +2,8 @@ import { NavLink, Outlet } from "react-router-dom";
 import { useAuth } from "../../lib/hook/auth-hook";
 
 export default function AdminLayout() {
-    const {loggedInUser} = useAuth()
-    console.log(loggedInUser)
+  const { loggedInUser } = useAuth();
+  console.log(loggedInUser);
   return (
     <section className="w-full min-h-screen flex bg-slate-100">
       <aside className="w-1/4 max-w-[320px] bg-white border-r border-slate-200 px-6 py-8 flex flex-col ">
@@ -154,10 +154,13 @@ export default function AdminLayout() {
       <main className="flex-1 flex flex-col">
         <header className="w-full bg-white px-6 py-5 shadow-sm">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4 rounded-full bg-slate-100 px-4 py-2 shadow-sm">
-              <span className="text-sm text-slate-500">
-                Search transactions, users…
-              </span>
+            <div className="flex items-center gap-2 rounded-full border border-slate-200 bg-slate-100 px-4 py-2 text-slate-500 shadow-sm">
+              <span className="text-base">🔍</span>
+              <input
+                type="search"
+                placeholder="Search transactions"
+                className="min-w-[220px] bg-transparent text-sm text-slate-900 outline-none placeholder:text-slate-400"
+              />
             </div>
             <div className="flex items-center gap-4">
               <div className="rounded-full bg-slate-100 p-3 text-slate-600">
@@ -167,7 +170,11 @@ export default function AdminLayout() {
                 🔔
               </div>
               <div className="flex items-center gap-3 rounded-full border border-slate-200 bg-white px-4 py-2">
-                <img src={loggedInUser?.image} alt={loggedInUser?.firstName} className="size-10"/>
+                <img
+                  src={loggedInUser?.image}
+                  alt={loggedInUser?.firstName}
+                  className="size-10"
+                />
                 <div>
                   <p className="text-sm font-semibold text-slate-900">
                     {loggedInUser?.firstName} {loggedInUser?.lastName}

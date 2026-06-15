@@ -14,7 +14,7 @@ const router = createBrowserRouter([
   {
     path: "/admin",
     element: (
-      <CheckLogin>
+      <CheckLogin allowed={"admin"}>
         <AdminLayout />
       </CheckLogin>
     ),
@@ -28,7 +28,26 @@ const router = createBrowserRouter([
       { path: "logout", element: <Logout /> },
       { path: "*", element: <NotFoundInner /> },
     ],
-},
+  },
+
+  {
+    path: "/user",
+    element: (
+      <CheckLogin allowed={"user"}>
+        <AdminLayout />
+      </CheckLogin>
+    ),
+    children: [
+      { index: true, element: <div>Admin Dashboard</div> },
+      { path: "expense", element: <div>Admin Expense</div> },
+      { path: "add-expense", element: <div>Admin Add Expense</div> },
+      { path: "report", element: <div>Admin Report</div> },
+      { path: "approvals", element: <div>Admin Approvals</div> },
+      { path: "cash-management", element: <div>Admin Cash Management</div> },
+      { path: "logout", element: <Logout /> },
+      { path: "*", element: <NotFoundInner /> },
+    ],
+  },
 
   { path: "*", element: <NotFound /> },
 ]);
