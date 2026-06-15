@@ -1,12 +1,6 @@
 import { NavLink, Outlet } from "react-router-dom";
 import { useAuth } from "../../lib/hook/auth-hook";
 
-const user = {
-  firstName: "Alex",
-  lastName: "Finance",
-  image: "",
-};
-
 export default function AdminLayout() {
     const {loggedInUser} = useAuth()
     console.log(loggedInUser)
@@ -149,7 +143,7 @@ export default function AdminLayout() {
             Help Center
           </NavLink>
           <NavLink
-            to="/logout"
+            to="/admin/logout"
             className="block rounded-3xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-medium text-slate-700 transition hover:bg-slate-100"
           >
             Logout
@@ -173,21 +167,19 @@ export default function AdminLayout() {
                 🔔
               </div>
               <div className="flex items-center gap-3 rounded-full border border-slate-200 bg-white px-4 py-2">
-                <div className="h-10 w-10 rounded-full bg-slate-400 flex items-center justify-center text-sm font-semibold text-white">
-                  {user.firstName[0]}
-                </div>
+                <img src={loggedInUser?.image} alt={loggedInUser?.firstName} className="size-10"/>
                 <div>
                   <p className="text-sm font-semibold text-slate-900">
                     {loggedInUser?.firstName} {loggedInUser?.lastName}
                   </p>
-                  <p className="text-xs text-slate-500">Administrator</p>
+                  <p className="text-xs text-slate-500">{loggedInUser?.role}</p>
                 </div>
               </div>
             </div>
           </div>
         </header>
 
-        <section className="flex-1 overflow-y-auto p-6">
+        <section className="relative flex-1 overflow-y-auto p-6">
           <Outlet />
         </section>
       </main>

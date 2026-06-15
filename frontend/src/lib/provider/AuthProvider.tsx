@@ -42,9 +42,15 @@ const AuthProvider = ({ children }: Readonly<{ children: ReactNode }>) => {
       return response;
     } catch (exceptation) {
       console.log(exceptation);
-    } finally{
-        setLoading(false)
+    } finally {
+      setLoading(false);
     }
+  };
+
+  const logout = () => {
+    Cookies.remove("authToken", { path: "/" });
+    Cookies.remove("refreshToken", { path: "/" });
+    setLoggedInUser(null);
   };
 
   useEffect(() => {
@@ -52,22 +58,25 @@ const AuthProvider = ({ children }: Readonly<{ children: ReactNode }>) => {
     if (token) {
       getLoggedInUser();
     } else {
+      setTimeout(() => {
         setLoading(false);
+      }, 0);
     }
   }, []);
-  return (
-    
-      loading ? <>loading... </> :
-      <AuthContext.Provider
-        value={{
-          loggedInUser: loggedInUser,
-          login: login,
-          getLoggedInUser: getLoggedInUser,
-        }}
-      >
-        {children}
-      </AuthContext.Provider>
-    
+
+  return loading ? (
+    <>loading... </>
+  ) : (
+    <AuthContext.Provider
+      value={{
+        loggedInUser: loggedInUser,
+        login: login,
+        getLoggedInUser: getLoggedInUser,
+        logout: logout,
+      }}
+    >
+      {children}
+    </AuthContext.Provider>
   );
 };
 
