@@ -1,48 +1,25 @@
-import {
-  type Request,
-  type Response,
-  type NextFunction,
-  Router,
-} from "express";
+import { Router } from "express";
+import { healthCheck } from "../controller/TestController.ts";
+import AuthController from "../controller/AuthController.ts";
+import AuthCheck from "../middleware/Auth.ts";
+import { bodyValidator } from "../middleware/Validators.ts";
+import z from "zod"
 
 const router: Router = Router();
 
-router.get("/", (req: Request, res: Response, next: NextFunction) => {
-  // res.end("Hello World")
-  res.json({
-    data: "Health OK",
-    message: "Success",
-    meta: null,
-  });
-});
+const authCtrl = new AuthController();
 
-router.post(
-  "/auth/login",
-  (req: Request, res: Response, next: NextFunction) => {
-    res.json({
-      data: {
-        accessToken: "",
-        refreshToken: "",
-      },
-      message: "Message",
-      meta: null,
-    });
-  },
-);
+const LoginSchema = z.object({
+    username: z.string().nonempty().nonoptional(),
+    password: z.string().nonempty().nonoptional()
+})
 
-router.get(
-  "/user/:userId",
-  (req: Request, res: Response, next: NextFunction) => {
-    const params = req.params;
-    const data = {
-      userId: params.userId,
-    };
-    res.json({
-      data: data,
-      message: "User fetched",
-      meta: null,
-    });
-  },
-);
+router.get("/", healthCheck);
+
+router.post("/auth/login", bodyValidator(LoginSchema), authCtrl.login);
+
+router.get("/auth/me", AuthCheck(), authCtrl.getLoggedInUserDetail)
+
+router.get("/user/:userId", authCtrl.getUserDetailById);
 
 export default router;
