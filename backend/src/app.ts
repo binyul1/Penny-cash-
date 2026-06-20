@@ -2,6 +2,7 @@ import express, { type Application } from "express";
 import router from "./router/router.ts";
 import { ErrorHandler } from "./middleware/ErrorHandling.ts";
 import { type Request, type Response, type NextFunction } from "express";
+import "./config/mongodb.ts";
 
 const app: Application = express();
 

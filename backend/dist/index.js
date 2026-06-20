@@ -1,4 +1,5 @@
 import http from "http";
+import "./src/config/app-env.js";
 import app from "./src/app.js";
 const server = http.createServer(app);
 //listen

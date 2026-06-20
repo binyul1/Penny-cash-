@@ -1,12 +1,10 @@
 class AuthController {
     constructor() {
-        this.ogin = async (req, res, next) => {
+        this.login = async (req, res, next) => {
             try {
+                const credentials = req.body;
                 res.json({
-                    data: {
-                        accessToken: "",
-                        refreshToken: "",
-                    },
+                    data: credentials,
                     message: "Login success",
                     meta: null,
                 });
@@ -22,7 +20,7 @@ class AuthController {
                 const query = req.query;
                 const data = {
                     id: params.userId,
-                    query: query
+                    query: query,
                 };
                 res.json({
                     data: data,
@@ -33,6 +31,17 @@ class AuthController {
             catch (exceptation) {
                 next(exceptation);
             }
+        };
+        this.getLoggedInUserDetail = async (req, res, next) => {
+            res.json({
+                data: {
+                    user: {
+                        id: 1,
+                    },
+                },
+                message: "User Detail",
+                meta: null
+            });
         };
     }
 }

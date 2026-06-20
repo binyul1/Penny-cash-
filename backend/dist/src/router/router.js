@@ -1,33 +1,10 @@
-import { Router, } from "express";
+import { Router } from "express";
+import { healthCheck } from "../controller/TestController.js";
+import authRouter from "./auth-router.js";
+import cashRequestRouter from "./cash-Request-router.js";
 const router = Router();
-router.get("/", (req, res, next) => {
-    // res.end("Hello World")
-    res.json({
-        data: "Health OK",
-        message: "Success",
-        meta: null,
-    });
-});
-router.post("/auth/login", (req, res, next) => {
-    res.json({
-        data: {
-            accessToken: "",
-            refreshToken: "",
-        },
-        message: "Message",
-        meta: null,
-    });
-});
-router.get("/user/:userId", (req, res, next) => {
-    const params = req.params;
-    const data = {
-        userId: params.userId,
-    };
-    res.json({
-        data: data,
-        message: "User fetched",
-        meta: null,
-    });
-});
+router.get("/", healthCheck);
+router.use("/auth", authRouter);
+router.use("/cash", cashRequestRouter);
 export default router;
 //# sourceMappingURL=router.js.map
