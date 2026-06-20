@@ -4,6 +4,8 @@ export const ErrorHandler = (error: any, req: Request, res: Response, next: Next
     let code = error.code || 500;
     let detail = error.details || error.detail || null;
     let message = error.message || "Internal App Error";
+
+    
     res.status(code).json({
             code : code,
             error: detail,
