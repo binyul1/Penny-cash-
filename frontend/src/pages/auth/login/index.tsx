@@ -3,10 +3,7 @@ import AuthPageShell from "../../../components/auth/AuthShell";
 import AuthPromoPanel from "../../../components/auth/AuthPromoPanel";
 import { useForm } from "react-hook-form";
 import { SubmitButton } from "../../../components/buttons/Button";
-import {
-  loginDTO,
-  type ICredentials,
-} from "../../../types/auth-types";
+import { loginDTO, type ICredentials } from "../../../types/auth-types";
 import { InputText } from "../../../components/form/InputText";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from "react-router-dom";
@@ -32,7 +29,12 @@ export default function Login() {
     try {
       const userDetail = await login(data);
 
-      navigate("/" + userDetail?.role);
+      if (!userDetail?.role) {
+        toast.error("Invalid or wrong credentials");
+        return;
+      }
+
+      navigate("/" + userDetail.role);
       console.log(userDetail);
     } catch (exception: unknown) {
       toast.error("Invalid or wrong credentials");
@@ -109,12 +111,12 @@ export default function Login() {
 
       <div className="mt-8 border-t border-slate-200 pt-6 text-center text-sm text-slate-600">
         Don’t have an account yet?
-        <a
-          href="#"
+        <Link
+          to="/register"
           className="ml-2 font-semibold text-indigo-600 hover:text-indigo-700"
         >
           Create an account
-        </a>
+        </Link>
       </div>
     </AuthPageShell>
   );

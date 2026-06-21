@@ -1,6 +1,7 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Login from "../pages/auth/login";
 import ForgetPassword from "../pages/auth/ForgetPassword";
+import Register from "../pages/register";
 import NotFound from "../pages/errors/NotFound";
 import AdminLayout from "../pages/layouts/AdminLayout";
 import NotFoundInner from "../pages/errors/NotFoundInner";
@@ -9,6 +10,7 @@ import Logout from "../pages/auth/Logout";
 
 const router = createBrowserRouter([
   { path: "/", element: <Login /> },
+  { path: "/register", element: <Register /> },
   { path: "/forget-password", element: <ForgetPassword /> },
 
   {

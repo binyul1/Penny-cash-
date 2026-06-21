@@ -18,23 +18,11 @@ export interface ILoginResponse {
 }
 export interface IUserDetail {
   id: number;
-  firstName: string;
-  lastName: string;
-  maidenName: string;
+  name: string;
   gender: string;
   email: string;
-  phone: string;
   username: string;
-  birthDate: string;
   image: string;
-  address: IAddress;
-  university: string;
-  company: {
-    department: string;
-    name: string;
-    title: string;
-    address: IAddress;
-  };
   role: string;
 }
 export const loginDTO = z.object({
@@ -46,23 +34,8 @@ export const loginResponseDTO = z.object({
   accessToken: z.string(),
   refreshToken: z.string(),
   email: z.string().email(),
-  firstName: z.string(),
-  lastName: z.string(),
+  name: z.string(),
   username: z.string(),
-  gender: z.string(),
   image: z.string().url(),
   id: z.number(),
 });
-
-export interface IAddress {
-  address: string;
-  city: string;
-  state: string;
-  stateCode: string;
-  postalCode: string;
-  coordinates: {
-    lat: number;
-    lng: number;
-  };
-  country: string;
-}

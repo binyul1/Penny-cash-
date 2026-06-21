@@ -1,5 +1,7 @@
-password=gO24S0xFGkG3c4JO
-username=root
+atlas admin roles user 
+username-root
+password- 6azaV3eAyPlAQ3Kp
 
-username=bin
-pw-cYMcV0B58Cxc9XgJ
+
+username-user-petty
+password-3rtEUlB2OqdyasLF

@@ -159,7 +159,7 @@ export default function AdminLayout() {
               <input
                 type="search"
                 placeholder="Search transactions"
-                className="min-w-[220px] bg-transparent text-sm text-slate-900 outline-none placeholder:text-slate-400"
+                className="min-w-55 bg-transparent text-sm text-slate-900 outline-none placeholder:text-slate-400"
               />
             </div>
             <div className="flex items-center gap-4">
@@ -170,14 +170,20 @@ export default function AdminLayout() {
                 🔔
               </div>
               <div className="flex items-center gap-3 rounded-full border border-slate-200 bg-white px-4 py-2">
-                <img
-                  src={loggedInUser?.image}
-                  alt={loggedInUser?.firstName}
-                  className="size-10"
-                />
+                {loggedInUser?.image ? (
+                  <img
+                    src={loggedInUser.image}
+                    alt={loggedInUser?.name}
+                    className="size-10 rounded-full object-cover"
+                  />
+                ) : (
+                  <div className="flex size-10 items-center justify-center rounded-full bg-indigo-100 text-sm font-semibold text-indigo-700">
+                    {loggedInUser?.name?.charAt(0)?.toUpperCase() ?? "U"}
+                  </div>
+                )}
                 <div>
                   <p className="text-sm font-semibold text-slate-900">
-                    {loggedInUser?.firstName} {loggedInUser?.lastName}
+                    {loggedInUser?.name}
                   </p>
                   <p className="text-xs text-slate-500">{loggedInUser?.role}</p>
                 </div>

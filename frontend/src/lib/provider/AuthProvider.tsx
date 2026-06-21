@@ -1,10 +1,6 @@
 import { useEffect, useState, type ReactNode } from "react";
 import AuthContext from "../../contex/AuthContext";
-import type {
-  ICredentials,
-  ILoginResponse,
-  IUserDetail,
-} from "../../types/auth-types";
+import type { ICredentials, IUserDetail } from "../../types/auth-types";
 import axiosInstance from "../../config/apiClient";
 import Cookies from "js-cookie";
 
@@ -17,13 +13,9 @@ const AuthProvider = ({ children }: Readonly<{ children: ReactNode }>) => {
       const response = (await axiosInstance.post(
         "/auth/login",
         credentials,
-      )) as ILoginResponse;
-      Cookies.set("authToken", response.accessToken, {
-        expires: 1,
-        secure: true,
-        sameSite: "lax",
-      });
-      Cookies.set("refreshToken", response.refreshToken, {
+      )) as string;
+
+      Cookies.set("authToken", response, {
         expires: 1,
         secure: true,
         sameSite: "lax",
@@ -33,6 +25,7 @@ const AuthProvider = ({ children }: Readonly<{ children: ReactNode }>) => {
       return userDetail;
     } catch (exceptation) {
       console.log(exceptation);
+      return null;
     }
   };
   const getLoggedInUser = async () => {
@@ -42,6 +35,8 @@ const AuthProvider = ({ children }: Readonly<{ children: ReactNode }>) => {
       return response;
     } catch (exceptation) {
       console.log(exceptation);
+      setLoggedInUser(null);
+      return null;
     } finally {
       setLoading(false);
     }
@@ -49,7 +44,6 @@ const AuthProvider = ({ children }: Readonly<{ children: ReactNode }>) => {
 
   const logout = () => {
     Cookies.remove("authToken", { path: "/" });
-    Cookies.remove("refreshToken", { path: "/" });
     setLoggedInUser(null);
   };
 
