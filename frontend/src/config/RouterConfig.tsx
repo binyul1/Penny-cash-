@@ -7,6 +7,7 @@ import AdminLayout from "../pages/layouts/AdminLayout";
 import NotFoundInner from "../pages/errors/NotFoundInner";
 import CheckLogin from "../components/auth/CheckLogin";
 import Logout from "../pages/auth/Logout";
+import CashManagementPage from "../pages/Deposit";
 
 const router = createBrowserRouter([
   { path: "/", element: <Login /> },
@@ -26,7 +27,7 @@ const router = createBrowserRouter([
       { path: "add-expense", element: <div>Admin Add Expense</div> },
       { path: "report", element: <div>Admin Report</div> },
       { path: "approvals", element: <div>Admin Approvals</div> },
-      { path: "cash-management", element: <div>Admin Cash Management</div> },
+      { path: "cash-management", element: <CashManagementPage /> },
       { path: "logout", element: <Logout /> },
       { path: "*", element: <NotFoundInner /> },
     ],
@@ -45,7 +46,7 @@ const router = createBrowserRouter([
       { path: "add-expense", element: <div>Admin Add Expense</div> },
       { path: "report", element: <div>Admin Report</div> },
       { path: "approvals", element: <div>Admin Approvals</div> },
-      { path: "cash-management", element: <div>Admin Cash Management</div> },
+      { path: "cash-management", element: <CashManagementPage /> },
       { path: "logout", element: <Logout /> },
       { path: "*", element: <NotFoundInner /> },
     ],

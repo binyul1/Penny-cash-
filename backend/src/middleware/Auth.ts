@@ -48,7 +48,8 @@ const AuthCheck = (role: null | Array<string> = null) => {
           ) {
             next();
           } else {
-            throw { code: 403, message: "Acess Denied" };
+            next({ code: 403, message: "Access Denied" });
+            return;
           }
         }
       }
