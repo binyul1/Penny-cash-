@@ -1,53 +1,7 @@
-import { useEffect, useState } from "react";
-import axiosInstance from "../../config/apiClient";
-
-type CashHistoryItem = {
-  _id: string;
-  transactionType?: "deposit" | "withdraw";
-  amount: number;
-  description?: string;
-  balanceAfterTransaction?: number;
-  createdAt?: string;
-  depositdBy?: {
-    name?: string;
-    email?: string;
-    username?: string;
-    role?: string;
-  };
-};
+import { useCashManagement } from "../../lib/hook/cash-management-hook";
 
 export default function History() {
-  const [transactions, setTransactions] = useState<CashHistoryItem[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    let isActive = true;
-
-    const loadHistory = async () => {
-      try {
-        const response = (await axiosInstance.get(
-          "/deposit/history",
-        )) as CashHistoryItem[];
-        if (isActive) {
-          setTransactions(Array.isArray(response) ? response : []);
-        }
-      } catch {
-        if (isActive) {
-          setTransactions([]);
-        }
-      } finally {
-        if (isActive) {
-          setIsLoading(false);
-        }
-      }
-    };
-
-    loadHistory();
-
-    return () => {
-      isActive = false;
-    };
-  }, []);
+  const { transactions, isHistoryLoading } = useCashManagement();
 
   return (
     <section className="overflow-hidden rounded-4xl border border-slate-200 bg-white shadow-sm">
@@ -75,7 +29,7 @@ export default function History() {
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100 bg-white text-sm">
-            {isLoading ? (
+            {isHistoryLoading ? (
               <tr>
                 <td
                   className="px-5 py-8 text-sm text-slate-500 sm:px-6"

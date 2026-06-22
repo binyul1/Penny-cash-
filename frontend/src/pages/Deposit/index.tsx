@@ -1,8 +1,7 @@
-import { useEffect, useState, type ReactNode } from "react";
+import type { ReactNode } from "react";
 import History from "../../components/Deposit/History";
-import axiosInstance from "../../config/apiClient";
-
-
+import { useCashManagement } from "../../lib/hook/cash-management-hook";
+import CashManagementProvider from "../../lib/provider/CashManagementProvider";
 
 function ActionButton({
   label,
@@ -33,103 +32,29 @@ function ActionButton({
 }
 
 export default function CashManagementPage() {
-  const [cashBalance, setCashBalance] = useState<number | null>(null);
-  const [activeAction, setActiveAction] = useState<
-    "deposit" | "withdraw" | null
-  >(null);
-  const [amount, setAmount] = useState("");
-  const [description, setDescription] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [formError, setFormError] = useState<string | null>(null);
-  const [formSuccess, setFormSuccess] = useState<string | null>(null);
+  return (
+    <CashManagementProvider>
+      <CashManagementView />
+    </CashManagementProvider>
+  );
+}
 
-  const loadBalance = async () => {
-    const response = (await axiosInstance.get("/deposit/balance")) as {
-      balance?: number;
-      data?: {
-        balance?: number;
-      };
-    };
-    const value = Number(response?.balance ?? response?.data?.balance ?? 0);
-
-    setCashBalance(Number.isFinite(value) ? value : 0);
-  };
-
-  useEffect(() => {
-    let isActive = true;
-
-    const loadInitialBalance = async () => {
-      try {
-        await loadBalance();
-      } catch {
-        if (isActive) {
-          setCashBalance(0);
-        }
-      }
-    };
-
-    loadInitialBalance();
-
-    return () => {
-      isActive = false;
-    };
-  }, []);
-
-  const resetFormState = () => {
-    setAmount("");
-    setDescription("");
-    setFormError(null);
-    setFormSuccess(null);
-  };
-
-  const openForm = (action: "deposit" | "withdraw") => {
-    setActiveAction(action);
-    resetFormState();
-  };
-
-  const submitMovement = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
-    if (!activeAction) {
-      return;
-    }
-
-    setIsSubmitting(true);
-    setFormError(null);
-    setFormSuccess(null);
-
-    try {
-      const endpoint =
-        activeAction === "deposit" ? "/deposit" : "/deposit/withdraw";
-
-      await axiosInstance.post(endpoint, {
-        amount,
-        description,
-      });
-
-      await loadBalance();
-      setFormSuccess(
-        activeAction === "deposit"
-          ? "Cash topped up successfully."
-          : "Cash withdrawn successfully.",
-      );
-      setActiveAction(null);
-      setAmount("");
-      setDescription("");
-    } catch (exception) {
-      const message =
-        exception && typeof exception === "object" && "data" in exception
-          ? String(
-              (exception as { data?: { message?: string } }).data?.message ??
-                "Unable to complete transaction",
-            )
-          : "Unable to complete transaction";
-
-      setFormError(message);
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+function CashManagementView() {
+  const {
+    cashBalance,
+    isBalanceLoading,
+    activeAction,
+    amount,
+    description,
+    isSubmitting,
+    formError,
+    formSuccess,
+    openForm,
+    closeForm,
+    setAmount,
+    setDescription,
+    submitMovement,
+  } = useCashManagement();
 
   return (
     <div className="min-h-full space-y-6 rounded-4xl bg-slate-50 p-1 sm:p-0">
@@ -142,14 +67,13 @@ export default function CashManagementPage() {
             </p>
             <div className="mt-3 flex flex-wrap items-end gap-x-4 gap-y-2">
               <h1 className="text-4xl font-semibold tracking-tight text-indigo-700 sm:text-5xl">
-                {cashBalance === null
+                {isBalanceLoading || cashBalance === null
                   ? "Loading..."
                   : new Intl.NumberFormat("en-US", {
                       style: "currency",
                       currency: "USD",
                     }).format(cashBalance)}
               </h1>
-              
             </div>
           </div>
         </div>
@@ -224,10 +148,7 @@ export default function CashManagementPage() {
 
             <button
               type="button"
-              onClick={() => {
-                setActiveAction(null);
-                resetFormState();
-              }}
+              onClick={closeForm}
               className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-100"
             >
               Close
@@ -297,8 +218,6 @@ export default function CashManagementPage() {
           </form>
         </section>
       ) : null}
-
-      
 
       <History />
     </div>
