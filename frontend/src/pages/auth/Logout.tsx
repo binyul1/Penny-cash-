@@ -3,8 +3,10 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../lib/hook/auth-hook";
 
 export default function Logout() {
-  const { logout } = useAuth();
+  const { logout, loggedInUser } = useAuth();
   const navigate = useNavigate();
+
+  const rolePrefix = loggedInUser?.role ? `/${loggedInUser.role}` : "/admin";
 
   const handleLogout = () => {
     logout();
@@ -12,7 +14,7 @@ export default function Logout() {
   };
 
   const handleCancel = () => {
-    navigate("/admin");
+    navigate(rolePrefix);
   };
 
   const buttonClass = useMemo(
