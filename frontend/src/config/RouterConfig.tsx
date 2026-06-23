@@ -8,6 +8,9 @@ import NotFoundInner from "../pages/errors/NotFoundInner";
 import CheckLogin from "../components/auth/CheckLogin";
 import Logout from "../pages/auth/Logout";
 import CashManagementPage from "../pages/Deposit";
+import AddExpensePage from "../pages/expense/AddExpensePage";
+import ApprovalsPage from "../pages/expense/ApprovalsPage";
+import ExpenseLedgerPage from "../pages/expense/ExpenseLedgerPage";
 
 const router = createBrowserRouter([
   { path: "/", element: <Login /> },
@@ -23,10 +26,10 @@ const router = createBrowserRouter([
     ),
     children: [
       { index: true, element: <div>Admin Dashboard</div> },
-      { path: "expense", element: <div>Admin Expense</div> },
-      { path: "add-expense", element: <div>Admin Add Expense</div> },
+      { path: "expense", element: <ExpenseLedgerPage /> },
+      { path: "add-expense", element: <AddExpensePage /> },
       { path: "report", element: <div>Admin Report</div> },
-      { path: "approvals", element: <div>Admin Approvals</div> },
+      { path: "approvals", element: <ApprovalsPage /> },
       { path: "cash-management", element: <CashManagementPage /> },
       { path: "logout", element: <Logout /> },
       { path: "*", element: <NotFoundInner /> },
@@ -42,10 +45,10 @@ const router = createBrowserRouter([
     ),
     children: [
       { index: true, element: <div>Admin Dashboard</div> },
-      { path: "expense", element: <div>Admin Expense</div> },
-      { path: "add-expense", element: <div>Admin Add Expense</div> },
+      { path: "expense", element: <ExpenseLedgerPage /> },
+      { path: "add-expense", element: <AddExpensePage /> },
       { path: "report", element: <div>Admin Report</div> },
-      { path: "approvals", element: <div>Admin Approvals</div> },
+      { path: "approvals", element: <ApprovalsPage /> },
       { path: "cash-management", element: <CashManagementPage /> },
       { path: "logout", element: <Logout /> },
       { path: "*", element: <NotFoundInner /> },

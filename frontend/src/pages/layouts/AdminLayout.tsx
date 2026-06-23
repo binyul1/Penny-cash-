@@ -4,6 +4,12 @@ import { useAuth } from "../../lib/hook/auth-hook";
 export default function AdminLayout() {
   const { loggedInUser } = useAuth();
   const rolePrefix = loggedInUser?.role ? `/${loggedInUser.role}` : "/admin";
+  const dashboardPath = rolePrefix;
+  const expensePath = `${rolePrefix}/expense`;
+  const addExpensePath = `${rolePrefix}/add-expense`;
+  const reportPath = `${rolePrefix}/report`;
+  const approvalsPath = `${rolePrefix}/approvals`;
+  const cashManagementPath = `${rolePrefix}/cash-management`;
 
   return (
     <section className="w-full min-h-screen flex bg-slate-100">
@@ -25,7 +31,7 @@ export default function AdminLayout() {
             <li>
               <NavLink
                 end
-                to="/admin"
+                to={dashboardPath}
                 className={({ isActive }) =>
                   `flex items-center gap-3 rounded-3xl px-4 py-3 text-sm font-semibold transition ${
                     isActive
@@ -43,7 +49,7 @@ export default function AdminLayout() {
             <li>
               <NavLink
                 end
-                to="/admin/expense"
+                to={expensePath}
                 className={({ isActive }) =>
                   `flex items-center gap-3 rounded-3xl px-4 py-3 text-sm font-semibold transition ${
                     isActive
@@ -61,7 +67,7 @@ export default function AdminLayout() {
             <li>
               <NavLink
                 end
-                to="/admin/add-expense"
+                to={addExpensePath}
                 className={({ isActive }) =>
                   `flex items-center gap-3 rounded-3xl px-4 py-3 text-sm font-semibold transition ${
                     isActive
@@ -79,7 +85,7 @@ export default function AdminLayout() {
             <li>
               <NavLink
                 end
-                to="/admin/report"
+                to={reportPath}
                 className={({ isActive }) =>
                   `flex items-center gap-3 rounded-3xl px-4 py-3 text-sm font-semibold transition ${
                     isActive
@@ -97,7 +103,7 @@ export default function AdminLayout() {
             <li>
               <NavLink
                 end
-                to="/admin/approvals"
+                to={approvalsPath}
                 className={({ isActive }) =>
                   `flex items-center gap-3 rounded-3xl px-4 py-3 text-sm font-semibold transition ${
                     isActive
@@ -115,7 +121,7 @@ export default function AdminLayout() {
             <li>
               <NavLink
                 end
-                to="/admin/cash-management"
+                to={cashManagementPath}
                 className={({ isActive }) =>
                   `flex items-center gap-3 rounded-3xl px-4 py-3 text-sm font-semibold transition ${
                     isActive

@@ -1,11 +1,45 @@
+import AuthService from "../services/AuthService.js";
+import UserModel from "../model/UserModel.js";
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+import { Secrets } from "../config/app-env.js";
 class AuthController {
     constructor() {
         this.login = async (req, res, next) => {
             try {
                 const credentials = req.body;
+                const userDetail = await UserModel.findOne({
+                    $or: [
+                        { username: credentials.username },
+                        { email: credentials.username },
+                    ],
+                });
+                if (!userDetail) {
+                    throw { code: 404, message: "User not found" };
+                }
+                if (!bcrypt.compareSync(credentials.password, userDetail.password)) {
+                    throw { code: 401, message: "Invalid credentials" };
+                }
+                const expiresInMinutes = Number(credentials.expiresInMinutes) || 180;
+                const token = jwt.sign({ sub: userDetail._id, typ: "Bearer" }, Secrets.jwtSecret, { expiresIn: `${expiresInMinutes}m` });
                 res.json({
-                    data: credentials,
+                    data: token,
                     message: "Login success",
+                    meta: null,
+                });
+            }
+            catch (exception) {
+                next(exception);
+            }
+        };
+        this.register = async (req, res, next) => {
+            try {
+                const data = await AuthService.mapUserDataForRegistration(req);
+                // db operation
+                const user = await AuthService.storeUser(data);
+                res.json({
+                    data: user,
+                    message: "User Registered",
                     meta: null,
                 });
             }
@@ -33,14 +67,11 @@ class AuthController {
             }
         };
         this.getLoggedInUserDetail = async (req, res, next) => {
+            const loggedInUser = req.loggedInUser;
             res.json({
-                data: {
-                    user: {
-                        id: 1,
-                    },
-                },
+                data: loggedInUser,
                 message: "User Detail",
-                meta: null
+                meta: null,
             });
         };
     }

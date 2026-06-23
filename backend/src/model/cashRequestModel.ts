@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
-
-const RequestSchema = new mongoose.Schema({
+const RequestSchema = new mongoose.Schema(
+  {
     title: {
       type: String,
       required: true,
@@ -11,6 +11,11 @@ const RequestSchema = new mongoose.Schema({
       type: Number,
       required: true,
       min: 1,
+    },
+    date: {
+      type: String,
+      trim: true,
+      default: "",
     },
     notes: {
       type: String,
@@ -30,20 +35,22 @@ const RequestSchema = new mongoose.Schema({
     },
     category: {
       type: String,
-      enum: ["Office Supplies", "Grocery", "Toiletries","Transport"],
+      enum: ["Office Supplies", "Grocery", "Toiletries", "Transport"],
       required: true,
     },
-    status:{
+    status: {
       type: String,
       enum: ["pending", "approved", "rejected"],
       default: "pending",
-    }
-},{
+    },
+  },
+  {
     autoCreate: true,
     autoIndex: true,
     timestamps: true,
-  });
+  },
+);
 
-  const RequestModel = mongoose.model("CashRequest", RequestSchema);
+const RequestModel = mongoose.model("CashRequest", RequestSchema);
 
 export default RequestModel;

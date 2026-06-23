@@ -16,7 +16,11 @@ class CashReqController {
     }
   };
 
-  getCashRequests = async (req: AuthRequest, res: Response, next: NextFunction) => {
+  getCashRequests = async (
+    req: AuthRequest,
+    res: Response,
+    next: NextFunction,
+  ) => {
     try {
       const data = await CashRequestService.getCashRequests(req);
       res.json({
@@ -29,7 +33,11 @@ class CashReqController {
     }
   };
 
-  updateCashRequestStatus = async (req: AuthRequest, res: Response, next: NextFunction) => {
+  updateCashRequestStatus = async (
+    req: AuthRequest,
+    res: Response,
+    next: NextFunction,
+  ) => {
     try {
       const id = req.params.id;
       const cashRequestDetail = await CashRequestService.getSingleRowByFilter({
@@ -42,6 +50,15 @@ class CashReqController {
         req,
         cashRequestDetail,
       );
+
+      if (mappedData.status === "approved") {
+        const requestId = typeof id === "string" ? id : String(id);
+        await CashRequestService.approveCashRequest(
+          requestId,
+          Number(cashRequestDetail.amount),
+        );
+      }
+
       const update = await CashRequestService.updateSingleRowByFilter(
         { _id: id },
         mappedData,
@@ -56,7 +73,11 @@ class CashReqController {
     }
   };
 
-  deleteCashRequest = async (req: AuthRequest, res: Response, next: NextFunction) => {
+  deleteCashRequest = async (
+    req: AuthRequest,
+    res: Response,
+    next: NextFunction,
+  ) => {
     try {
       const id = req.params.id;
       const cashRequestDetail = await CashRequestService.getSingleRowByFilter({
@@ -76,9 +97,13 @@ class CashReqController {
     } catch (exception) {
       next(exception);
     }
-  }
+  };
 
-  getCashRequestById = async (req: AuthRequest, res: Response, next: NextFunction) => {
+  getCashRequestById = async (
+    req: AuthRequest,
+    res: Response,
+    next: NextFunction,
+  ) => {
     try {
       const id = req.params.id;
       const cashRequestDetail = await CashRequestService.getSingleRowByFilter({

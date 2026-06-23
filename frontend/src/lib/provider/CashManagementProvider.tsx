@@ -64,8 +64,24 @@ const CashManagementProvider = ({
       void refreshLedger();
     }, 0);
 
+    const refreshOnActivity = () => {
+      if (document.visibilityState === "visible") {
+        void refreshLedger();
+      }
+    };
+
+    const intervalId = window.setInterval(() => {
+      void refreshLedger();
+    }, 5000);
+
+    window.addEventListener("focus", refreshOnActivity);
+    document.addEventListener("visibilitychange", refreshOnActivity);
+
     return () => {
       clearTimeout(initializeLedger);
+      window.clearInterval(intervalId);
+      window.removeEventListener("focus", refreshOnActivity);
+      document.removeEventListener("visibilitychange", refreshOnActivity);
     };
   }, [refreshLedger]);
 
