@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 import axiosInstance from "../../config/apiClient";
 
@@ -21,23 +21,29 @@ export default function ApprovalsPage() {
   const [loading, setLoading] = useState(true);
   const [updatingId, setUpdatingId] = useState<string | null>(null);
 
-  const loadExpenses = async () => {
+  const loadExpenses = useCallback(async () => {
     try {
       setLoading(true);
       const response = await axiosInstance.get("/cash/expenses");
       const allExpenses = Array.isArray(response) ? response : [];
-      setExpenses(allExpenses.filter((expense) => expense.status === "pending"));
+      setExpenses(
+        allExpenses.filter((expense) => expense.status === "pending"),
+      );
     } catch (error) {
       console.error(error);
       toast.error("Unable to load expense requests");
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
-    void loadExpenses();
-  }, []);
+    const timer = window.setTimeout(() => {
+      void loadExpenses();
+    }, 0);
+
+    return () => window.clearTimeout(timer);
+  }, [loadExpenses]);
 
   const updateStatus = async (id: string, status: "approved" | "rejected") => {
     try {
@@ -63,15 +69,18 @@ export default function ApprovalsPage() {
           Review and approve requests
         </h1>
         <p className="mt-3 text-sm leading-6 text-slate-600">
-          Review each expense request, approve it, or reject it directly from here.
+          Review each expense request, approve it, or reject it directly from
+          here.
         </p>
       </div>
 
-      <div className="rounded-[32px] border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+      <div className="rounded-4xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
         {loading ? (
           <div className="text-sm text-slate-500">Loading expenses...</div>
         ) : expenses.length === 0 ? (
-          <div className="text-sm text-slate-500">No expense requests found.</div>
+          <div className="text-sm text-slate-500">
+            No expense requests found.
+          </div>
         ) : (
           <div className="space-y-4">
             {expenses.map((expense) => (
@@ -96,7 +105,10 @@ export default function ApprovalsPage() {
                       <span>Amount: {expense.amount}</span>
                       <span>Category: {expense.category}</span>
                       <span>
-                        Submitted by: {expense.createdBy?.name || expense.createdBy?.email || "Unknown"}
+                        Submitted by:{" "}
+                        {expense.createdBy?.name ||
+                          expense.createdBy?.email ||
+                          "Unknown"}
                       </span>
                     </div>
                   </div>
@@ -105,7 +117,10 @@ export default function ApprovalsPage() {
                     <button
                       type="button"
                       onClick={() => updateStatus(expense._id, "approved")}
-                      disabled={updatingId === expense._id || expense.status === "approved"}
+                      disabled={
+                        updatingId === expense._id ||
+                        expense.status === "approved"
+                      }
                       className="rounded-2xl bg-emerald-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-70"
                     >
                       {updatingId === expense._id ? "Updating..." : "Approve"}
@@ -113,7 +128,10 @@ export default function ApprovalsPage() {
                     <button
                       type="button"
                       onClick={() => updateStatus(expense._id, "rejected")}
-                      disabled={updatingId === expense._id || expense.status === "rejected"}
+                      disabled={
+                        updatingId === expense._id ||
+                        expense.status === "rejected"
+                      }
                       className="rounded-2xl bg-rose-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-rose-700 disabled:cursor-not-allowed disabled:opacity-70"
                     >
                       {updatingId === expense._id ? "Updating..." : "Reject"}

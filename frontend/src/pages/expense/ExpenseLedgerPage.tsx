@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 import axiosInstance from "../../config/apiClient";
 
@@ -20,7 +20,7 @@ export default function ExpenseLedgerPage() {
   const [requests, setRequests] = useState<ExpenseRequest[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const loadRequests = async () => {
+  const loadRequests = useCallback(async () => {
     try {
       setLoading(true);
       const response = await axiosInstance.get("/cash/expenses");
@@ -31,11 +31,15 @@ export default function ExpenseLedgerPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
-    void loadRequests();
-  }, []);
+    const timer = window.setTimeout(() => {
+      void loadRequests();
+    }, 0);
+
+    return () => window.clearTimeout(timer);
+  }, [loadRequests]);
 
   return (
     <div className="mx-auto flex w-full max-w-7xl flex-col gap-6">
@@ -51,7 +55,7 @@ export default function ExpenseLedgerPage() {
         </p>
       </div>
 
-      <section className="overflow-hidden rounded-[32px] border border-slate-200 bg-white shadow-sm">
+      <section className="overflow-hidden rounded-4xl border border-slate-200 bg-white shadow-sm">
         <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 px-5 py-4 sm:px-6">
           <div>
             <h2 className="text-lg font-semibold text-slate-900">Requests</h2>
