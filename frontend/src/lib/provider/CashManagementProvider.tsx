@@ -70,16 +70,12 @@ const CashManagementProvider = ({
       }
     };
 
-    const intervalId = window.setInterval(() => {
-      void refreshLedger();
-    }, 5000);
 
     window.addEventListener("focus", refreshOnActivity);
     document.addEventListener("visibilitychange", refreshOnActivity);
 
     return () => {
       clearTimeout(initializeLedger);
-      window.clearInterval(intervalId);
       window.removeEventListener("focus", refreshOnActivity);
       document.removeEventListener("visibilitychange", refreshOnActivity);
     };
